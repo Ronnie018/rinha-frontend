@@ -1,13 +1,17 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useContext } from 'react';
 import JsonRenderer from './JsonRenderer';
 import { StArrayNodeRenderer, StShowButton } from './StyledJsonViewer';
 import { tooBigSize } from './bools';
 
-const ArrayNodeRenderer = ({ node }) => {
+import { ConfigContext } from '../App';
+
+const ArrayNodeRenderer = ({ node, depth = 0 }) => {
   const [isNodeOpen, setIsNodeOpen] = useState(false);
   const increaseFactor = 2;
-  const [showSize, setShowSize] = useState(50);
-  const [data, setData] = useState([]);
+
+  const { size } = useContext(ConfigContext);
+
+  const [showSize, setShowSize] = useState(size);
 
   const limitedMap = (array, callback, limit) => {
     const result = [];
@@ -30,6 +34,7 @@ const ArrayNodeRenderer = ({ node }) => {
                 isNodeOpen={isNodeOpen}
                 isNodeTooBig={node.length > tooBigSize}
                 index={index}
+                depth={depth + 1}
               />
             </Fragment>
           ),
@@ -44,12 +49,16 @@ const ArrayNodeRenderer = ({ node }) => {
           </StShowButton>
         )}
       </div>
-      ]
       {isNodeOpen && node.length > showSize && (
-        <button onClick={() => setShowSize(showSize + increaseFactor)}>
-          CLick to rerender bigger
-        </button>
+        <>
+          <button onClick={() => setShowSize(showSize + increaseFactor)}>
+            CLick to re-render bigger
+          </button>
+
+          <br />
+        </>
       )}
+      ]
     </StArrayNodeRenderer>
   );
 };
