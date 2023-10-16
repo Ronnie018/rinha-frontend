@@ -39,7 +39,7 @@ function App() {
       </form>
 
       <div>
-        {file && <JsonViewer json={file}></JsonViewer>}
+        {file && <JsonViewer json={file} />}
       </div>
     </>
   );
