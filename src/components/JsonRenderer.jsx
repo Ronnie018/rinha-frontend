@@ -7,7 +7,7 @@ import {
 } from './StyledJsonViewer';
 import { isArray, isObject } from './bools';
 import ArrayNodeRenderer from './ArrayNodeRenderer';
-import { ConfigContext } from '../App';
+import { ConfigContext } from '../pages/Viewer';
 
 const JsonRenderer = ({
   node,
@@ -30,13 +30,14 @@ const JsonRenderer = ({
         <ObjectNodeRenderer
           node={node}
           depth={depth}
-          shouldLoad={isBase || active || isNodeOpen || depth < maxDepth}
+          shouldLoad={isBase || active || isNodeOpen || depth <= maxDepth}
           isBase={isBase}
           toggle={() => setActive(!active)}
         />
       );
 
-    if (isArray(node)) return <ArrayNodeRenderer node={node} depth={depth} />;
+    if (isArray(node))
+      return <ArrayNodeRenderer node={node} depth={isBase ? 0 : depth + 1} />;
 
     return <StString>{node}</StString>;
   };
@@ -60,7 +61,7 @@ const ObjectNodeRenderer = ({
     return Object.entries(node).map(([key, value], index) => (
       <StyledJsonRenderer key={index} className={isBase && 'isBase'}>
         <span className='object-key'>{key}: </span>
-        <JsonRenderer node={value} depth={depth + 1} />
+        <JsonRenderer node={value} depth={depth} />
       </StyledJsonRenderer>
     ));
   }

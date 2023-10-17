@@ -31,6 +31,7 @@ export const JsonViewerContainer = styled.div`
   max-width: 100%;
   min-width: 250px;
   margin: 0 auto;
+  font-family: 'jetBrains mono', monospace;
 `;
 
 export const StShowButton = styled.button`

@@ -1,9 +1,9 @@
-import { useState, Fragment, useContext } from 'react';
+import { useState, Fragment, useContext, useRef, useEffect } from 'react';
 import JsonRenderer from './JsonRenderer';
 import { StArrayNodeRenderer, StShowButton } from './StyledJsonViewer';
 import { tooBigSize } from './bools';
 
-import { ConfigContext } from '../App';
+import { ConfigContext } from '../pages/Viewer';
 
 const ArrayNodeRenderer = ({ node, depth = 0 }) => {
   const [isNodeOpen, setIsNodeOpen] = useState(false);
@@ -23,7 +23,7 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
 
   return (
     <StArrayNodeRenderer>
-      [
+      [<span>D: {depth}</span>
       <div className='array-container'>
         {limitedMap(
           node,
@@ -51,11 +51,20 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
       </div>
       {isNodeOpen && node.length > showSize && (
         <>
-          <button onClick={() => setShowSize(showSize + increaseFactor)}>
-            CLick to re-render bigger
-          </button>
-
-          <br />
+          {depth < 2 ? (
+            <Observable
+              cb={() => setShowSize(() => showSize + increaseFactor)}
+            />
+          ) : (
+            <>
+              <button
+                onClick={() => setShowSize(() => showSize + increaseFactor)}
+              >
+                CLick to re-render bigger
+              </button>
+              <br />
+            </>
+          )}
         </>
       )}
       ]
@@ -64,3 +73,35 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
 };
 
 export default ArrayNodeRenderer;
+
+const Observable = ({ cb }) => {
+  const observer_obj = useRef(null);
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          cb();
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1,
+    }
+  );
+
+  let done = false;
+  useEffect(() => {
+    if (window && observer_obj.current) {
+      observer.observe(observer_obj.current);
+
+      done = true;
+      return () => {
+        observer.disconnect();
+      };
+    }
+  });
+
+  return <span ref={observer_obj} />;
+};
