@@ -1,9 +1,10 @@
 {
-  "homepage": "https://ronnie018.github.io/rinha-frontend",
+  "homepage": "http://ronnie018.github.io/rinha-frontend",
   "name": "app",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
