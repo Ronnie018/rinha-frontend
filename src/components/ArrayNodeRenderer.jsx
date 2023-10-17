@@ -1,21 +1,43 @@
-import { useState, Fragment, useContext, useRef, useEffect } from 'react';
-import JsonRenderer from './JsonRenderer';
-import { StArrayNodeRenderer, StShowButton } from './StyledJsonViewer';
-import { tooBigSize } from './bools';
+import { useState, Fragment, useContext } from 'react';
 
-import { ConfigContext } from '../pages/Viewer';
+import { StArrayNodeRenderer, StShowButton } from './StyledJsonViewer';
+
+import JsonRenderer from './JsonRenderer';
+import { tooBigSize, increaseFactor } from './bools';
+
+import Observable from './Observable';
+
+import { ConfigContext } from '../Contexts';
 
 const ArrayNodeRenderer = ({ node, depth = 0 }) => {
-  const [isNodeOpen, setIsNodeOpen] = useState(false);
-  const increaseFactor = 2;
-
+  // STATES
   const { size } = useContext(ConfigContext);
 
+  const [isNodeOpen, setIsNodeOpen] = useState(false);
   const [showSize, setShowSize] = useState(size);
 
-  const limitedMap = (array, callback, limit) => {
+  // LOCAL BOOLS
+  const shoulShowObservable = isNodeOpen && node.length > showSize;
+  const isBaseArray = depth < 2;
+  const canDecrease = showSize >= size + increaseFactor;
+  const isNotAtTheStart = shoulShowObservable && canDecrease && isBaseArray;
+  const isNodeNotExpanded = !isNodeOpen && node.length > tooBigSize;
+
+  function showNextItems() {
+    setShowSize((vl) => vl + increaseFactor);
+  }
+
+  function showPreviousItems() {
+    setShowSize((vl) => vl - increaseFactor);
+  }
+
+  const rangeMap = (array, callback, limit) => {
+    const startValue = isBaseArray ? showSize - size : 0;
+    const maxValue = Math.min(array.length, limit);
+
     const result = [];
-    for (let i = 0; i < Math.min(array.length, limit); i++) {
+
+    for (let i = startValue; i < maxValue; i++) {
       result.push(callback(array[i], i));
     }
     return result;
@@ -23,9 +45,12 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
 
   return (
     <StArrayNodeRenderer>
+      {isNotAtTheStart && (
+        <StShowButton onClick={showPreviousItems}>Go Back</StShowButton>
+      )}
       [
       <div className='array-container'>
-        {limitedMap(
+        {rangeMap(
           node,
           (value, index) => (
             <Fragment key={index}>
@@ -40,7 +65,7 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
           ),
           showSize
         )}
-        {!isNodeOpen && node.length > tooBigSize && (
+        {isNodeNotExpanded && (
           <StShowButton
             className='btn-open-node'
             onClick={() => setIsNodeOpen(!isNodeOpen)}
@@ -49,59 +74,18 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
           </StShowButton>
         )}
       </div>
-      {isNodeOpen && node.length > showSize && (
-        <>
-          {depth < 2 ? (
-            <Observable
-              cb={() => setShowSize(() => showSize + increaseFactor)}
-            />
-          ) : (
-            <>
-              <button
-                onClick={() => setShowSize(() => showSize + increaseFactor)}
-              >
-                CLick to re-render bigger
-              </button>
-              <br />
-            </>
-          )}
-        </>
+      {shoulShowObservable && (
+        <ShowMore cb={showNextItems} infinite={isBaseArray} />
       )}
       ]
     </StArrayNodeRenderer>
   );
 };
 
+function ShowMore({ cb, infinite = false }) {
+  if (infinite) return <Observable cb={cb} />;
+
+  return <StShowButton onClick={cb}>Show More</StShowButton>;
+}
+
 export default ArrayNodeRenderer;
-
-const Observable = ({ cb }) => {
-  const observer_obj = useRef(null);
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          cb();
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1,
-    }
-  );
-
-  let done = false;
-  useEffect(() => {
-    if (window && observer_obj.current) {
-      observer.observe(observer_obj.current);
-
-      done = true;
-      return () => {
-        observer.disconnect();
-      };
-    }
-  });
-
-  return <span ref={observer_obj} />;
-};
