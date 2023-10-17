@@ -26,7 +26,7 @@ export const StyledJsonRenderer = styled.div`
   }
 `;
 
-export const JsonViewerContainer = styled.div`
+export const JsonViewerContainer = styled.section`
   width: max-content;
   max-width: 100%;
   min-width: 250px;
@@ -45,7 +45,7 @@ export const StArrayNodeRenderer = styled.span`
     padding-left: 1rem;
     border-left: 2px solid #bfbfbf;
     .btn-open-node {
-      background-color: red;
+      background-color: #bfbfbf;
     }
   }
 `;

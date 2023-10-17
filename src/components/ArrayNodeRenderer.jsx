@@ -23,7 +23,7 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
 
   return (
     <StArrayNodeRenderer>
-      [<span>D: {depth}</span>
+      [
       <div className='array-container'>
         {limitedMap(
           node,

@@ -30,14 +30,19 @@ const Upload = ({ setFile, setFileName }) => {
 
   return (
     <StUpload>
-      <div className='container'>
+      <main className='container'>
         <h1>JSON Tree Viewer</h1>
 
         <p>
           Simple JSON Viewer that runs completely on-client. No data exchange.
         </p>
 
-        <label htmlFor='json' onClick={() => inputRef.current.click()}>
+        <label
+          htmlFor='json'
+          onClick={() => inputRef.current.click()}
+          aria-label='Load JSON'
+          aria-description={'Select a JSON file to load'}
+        >
           <button>Load JSON</button>
           <input
             ref={inputRef}
@@ -48,10 +53,18 @@ const Upload = ({ setFile, setFileName }) => {
             onChange={handleFileChange}
           />
         </label>
-        {isLoading && <p className='msg loading'>Loading...</p>}
+        {isLoading && (
+          <p className='msg loading' role='status' aria-live='polite'>
+            Loading...
+          </p>
+        )}
 
-        {err && <p className='msg error'>{err}</p>}
-      </div>
+        {err && (
+          <p className='msg error' role='alert' aria-live='assertive'>
+            {err}
+          </p>
+        )}
+      </main>
     </StUpload>
   );
 };

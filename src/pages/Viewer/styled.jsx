@@ -32,7 +32,6 @@ const StViewer = styled.div`
 
 export const StConfig = styled.div`
   display: flex;
-  display: none;
   flex-direction: column;
   background-color: #333333;
   position: fixed;
