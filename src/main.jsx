@@ -1,12 +1,17 @@
+import Contexts from './Contexts';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import Contexts from './Contexts.jsx';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
     <Contexts>
       <App />
     </Contexts>
   </React.StrictMode>
 );
+
+reportWebVitals();
