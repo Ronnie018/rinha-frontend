@@ -1,24 +1,25 @@
-import { useState, createContext } from 'react';
+import { useState, useMemo } from 'react';
 import JsonViewer from '../../components/JsonViewer';
 import StViewer, { StConfig } from './styled';
-
-export const ConfigContext = createContext({});
+import { ConfigContext } from '../../Contexts';
 
 const Viewer = ({ file, fileName }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [configVariables, setConfigVariables] = useState({
-    depth: 3,
-    size: 2,
+    depth: 5,
+    size: 10,
   });
+
+  // Memoize the JsonViewer component
+  const memoizedJsonViewer = useMemo(() => <JsonViewer json={file} />, [file]);
 
   return (
     <ConfigContext.Provider value={configVariables}>
       <StViewer>
         <main>
           <h2 className='filename'>{fileName}</h2>
-          {file && <JsonViewer json={file} />}
+          {file && memoizedJsonViewer}
         </main>
-
         <StConfig
           title='Config'
           aria-description='change how the data is displayed by default'
