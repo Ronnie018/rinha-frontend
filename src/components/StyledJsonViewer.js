@@ -38,6 +38,7 @@ export const StShowButton = styled.button`
   cursor: pointer;
   display: block;
   padding: 5px 0;
+  margin: 0 auto;
 `;
 
 export const StArrayNodeRenderer = styled.span`
