@@ -7,7 +7,7 @@ import {
 } from './StyledJsonViewer';
 import { isArray, isObject } from './bools';
 import ArrayNodeRenderer from './ArrayNodeRenderer';
-import { ConfigContext } from '../pages/Viewer';
+import { ConfigContext } from '../Contexts';
 
 const JsonRenderer = ({
   node,
