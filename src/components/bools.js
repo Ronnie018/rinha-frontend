@@ -7,3 +7,5 @@ export function isArray(obj) {
 }
 
 export const tooBigSize = 1;
+
+export const increaseFactor = 2;
