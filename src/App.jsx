@@ -7,7 +7,7 @@ function App() {
   let [file, setFile] = useState(null);
   let [fileName, setFileName] = useState(null);
 
-  if (file) return <Viewer file={file} fileName={fileName}/>;
+  if (file) return <Viewer file={file} fileName={fileName} setFile={setFile}/>;
 
   return <Upload setFile={setFile} setFileName={setFileName} />;
 }

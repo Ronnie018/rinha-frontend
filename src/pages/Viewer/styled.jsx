@@ -1,4 +1,3 @@
-import react from 'react';
 import styled from 'styled-components';
 
 const StViewer = styled.div`
@@ -52,6 +51,27 @@ export const StConfig = styled.div`
       padding: 0.5rem;
       height: 2rem;
     }
+  }
+`;
+
+export const StBack = styled.button`
+  display: flex;
+  flex-direction: column;
+  background-color: #333333;
+  position: fixed;
+  border: none;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  padding: 1rem;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #222;
+  }
+  &:active {
+    background-color: #111;
   }
 `;
 

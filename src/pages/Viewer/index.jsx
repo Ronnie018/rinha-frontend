@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import JsonViewer from '../../components/JsonViewer';
-import StViewer, { StConfig } from './styled';
+import StViewer, { StConfig, StBack } from './styled';
 import { ConfigContext } from '../../Contexts';
 
-const Viewer = ({ file, fileName }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+const Viewer = ({ file, fileName, setFile }) => {
+  // const [menuOpen, setMenuOpen] = useState(false);
   const [configVariables, setConfigVariables] = useState({
     depth: 5,
     size: 40,
@@ -20,6 +20,14 @@ const Viewer = ({ file, fileName }) => {
           <h2 className='filename'>{fileName}</h2>
           {file && memoizedJsonViewer}
         </main>
+        <StBack
+          aria-description='go back'
+          onClick={() => {
+            setFile(null);
+          }}
+        >
+          {'<'}
+        </StBack>
         {/* <StConfig
           title='Config'
           aria-description='change how the data is displayed by default'
