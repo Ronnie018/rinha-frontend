@@ -9,6 +9,10 @@ const StViewer = styled.div`
 
   max-width: 100%;
 
+  main {
+    margin: 0 auto;
+  }
+
   .filename {
     font-size: 2rem;
     margin-bottom: 1rem;
