@@ -9,6 +9,20 @@ import Observable from './Observable';
 
 import { ConfigContext } from '../Contexts';
 
+function getPageScrollHeight() {
+  const documentHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+
+  const windowHeight =
+    window.innerHeight || document.documentElement.clientHeight;
+
+  const pageScrollHeight = documentHeight - windowHeight;
+
+  return pageScrollHeight;
+}
+
 const ArrayNodeRenderer = ({ node, depth = 0 }) => {
   // STATES
   const { size } = useContext(ConfigContext);
@@ -18,7 +32,7 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
 
   // LOCAL BOOLS
   const shoulShowObservable = isNodeOpen && node.length > showSize;
-  const isBaseArray = depth < 2;
+  const isBaseArray = depth < increaseFactor;
   const canDecrease = showSize >= size + increaseFactor;
   const isNotAtTheStart = shoulShowObservable && canDecrease && isBaseArray;
   const isNodeNotExpanded = !isNodeOpen && node.length > tooBigSize;
@@ -43,6 +57,8 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
     return result;
   };
 
+  let lastSeen = null;
+
   return (
     <StArrayNodeRenderer>
       {isNotAtTheStart && (
@@ -61,6 +77,16 @@ const ArrayNodeRenderer = ({ node, depth = 0 }) => {
                 index={index}
                 depth={depth + 1}
               />
+              {isNotAtTheStart && index % increaseFactor === 0 && (
+                <Observable
+                  cb={() => {
+                    const pageScrollHeight = getPageScrollHeight();
+                    if (window.scrollY < pageScrollHeight / 2) {
+                      showPreviousItems();
+                    }
+                  }}
+                />
+              )}
             </Fragment>
           ),
           showSize

@@ -7,7 +7,7 @@ const Viewer = ({ file, fileName }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [configVariables, setConfigVariables] = useState({
     depth: 5,
-    size: 10,
+    size: 40,
   });
 
   // Memoize the JsonViewer component
@@ -20,7 +20,7 @@ const Viewer = ({ file, fileName }) => {
           <h2 className='filename'>{fileName}</h2>
           {file && memoizedJsonViewer}
         </main>
-        <StConfig
+        {/* <StConfig
           title='Config'
           aria-description='change how the data is displayed by default'
         >
@@ -78,7 +78,7 @@ const Viewer = ({ file, fileName }) => {
               </div>
             </div>
           )}
-        </StConfig>
+        </StConfig> */}
       </StViewer>
     </ConfigContext.Provider>
   );
